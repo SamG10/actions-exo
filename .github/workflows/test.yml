@@ -1,0 +1,40 @@
+name: Run and Check Tests
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    outputs:
+      test-result: ${{ steps.run-tests.outputs.test-result }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      id: run-tests
+      run: |
+        if npm run test; then
+          echo "::set-output name=test-result::pass"
+        else
+          echo "::set-output name=test-result::fail"
+        fi
+
+  check-tests:
+    name: Check Test Results
+    runs-on: ubuntu-latest
+
+    needs: run-tests
+
+    steps:
+    - name: Check test results
+      run: echo "Test result: ${{ needs.run-tests.outputs.test-result }}"
