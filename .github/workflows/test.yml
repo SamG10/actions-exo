@@ -3,7 +3,7 @@ name: Run and Check Tests
 on:
   push:
     branches:
-      - master
+      - develop
 
 jobs:
   run-tests:
@@ -14,20 +14,17 @@ jobs:
       test-result: ${{ steps.run-tests.outputs.test-result }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Run tests
-      id: run-tests
-      run: |
-        if npm run test; then
+      - name: Run tests
+        id: run-tests
+        run: |
+          npm run test
           echo "::set-output name=test-result::pass"
-        else
-          echo "::set-output name=test-result::fail"
-        fi
 
   check-tests:
     name: Check Test Results
@@ -36,5 +33,5 @@ jobs:
     needs: run-tests
 
     steps:
-    - name: Check test results
-      run: echo "Test result: ${{ needs.run-tests.outputs.test-result }}"
+      - name: Check test results
+        run: echo "${{ needs.run-tests.outputs.test-result }}"
