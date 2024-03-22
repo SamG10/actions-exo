@@ -22,9 +22,7 @@ jobs:
 
       - name: Run tests
         id: run-tests
-        run: |
-          npm run test
-          echo "::set-output name=test-result::pass"
+        run: npm run test
 
   check-tests:
     name: Check Test Results
